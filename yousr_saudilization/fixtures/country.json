@@ -1,0 +1,14 @@
+[
+ {
+  "code": "SA",
+  "country_name": "Saudi Arabia",
+  "custom_country_name_in_arabic": "المملكة العربية السعودية",
+  "date_format": "dd-mm-yyyy",
+  "docstatus": 0,
+  "doctype": "Country",
+  "modified": "2026-07-29 11:07:41.345688",
+  "name": "Saudi Arabia",
+  "time_format": "HH:mm:ss",
+  "time_zones": "Asia/Riyadh"
+ }
+]
