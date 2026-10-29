@@ -1,8 +1,8 @@
 app_name = "yousr_saudilization"
-app_title = "Yousr Saudilization"
-app_publisher = "Khayam Khan"
+app_title = "YousrERP"
+app_publisher = "BOT Solutions LLC."
 app_description = "Yousr ERP Custom Application for custom branding, custom fields and customizations"
-app_email = "khayamkhan852@gmail.com"
+app_email = "hello@yousrerp.com"
 app_license = "mit"
 
 # Apps
@@ -60,12 +60,12 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/yousr_saudilization/css/yousr_saudilization.css"
-# app_include_js = "/assets/yousr_saudilization/js/yousr_saudilization.js"
+app_include_css = "/assets/yousr_saudilization/css/yousrerp-brand.css"
+app_include_js = "/assets/yousr_saudilization/js/yousrerp-brand.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/yousr_saudilization/css/yousr_saudilization.css"
-# web_include_js = "/assets/yousr_saudilization/js/yousr_saudilization.js"
+web_include_css = "/assets/yousr_saudilization/css/yousrerp-brand.css"
+web_include_js = "/assets/yousr_saudilization/js/yousrerp-brand.js"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "yousr_saudilization/public/scss/website"
@@ -293,3 +293,6 @@ export_python_type_annotations = True
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+
+# Updates existing app-owned branding without replacing a tenant-selected logo.
+after_migrate = "yousr_saudilization.branding.apply_branding"
