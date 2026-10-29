@@ -33,3 +33,9 @@ html.yousr-erp .page-card-head img { max-height: 100px; width: auto; }
 html.yousr-erp[data-theme="dark"] .page-card-head img[src*="yousr_saudilization"] { content: url("/assets/yousr_saudilization/images/yousrerp-square-dark.svg"); }
 @media (max-width: 575px) { html.yousr-erp .navbar-home img.app-logo { width: 105px; } }
 @media (prefers-reduced-motion: reduce) { html.yousr-erp { scroll-behavior: auto; } }
+/* Frappe v16 Espresso navigation and primary actions. */
+html.yousr-erp .dock .header-logo img { width: 32px; height: 32px; object-fit: contain; }
+html.yousr-erp .dock .dock-item.active { color: #176bc2; background-color: #e8f2ff; }
+html.yousr-erp[data-theme="dark"] .dock .dock-item.active { color: #9acaff; background-color: #203c5c; }
+html.yousr-erp .es-button.primary-action[data-variant="solid"] { background-color: #176bc2; color: #fff; }
+html.yousr-erp .es-button.primary-action[data-variant="solid"]:hover { background-color: #125ba6; }
