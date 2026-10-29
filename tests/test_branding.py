@@ -27,6 +27,11 @@ class BrandingTest(unittest.TestCase):
         self.branding.apply_branding()
         self.assertEqual(1,self.docs['Website Settings'].saves)
         self.assertEqual(0,self.docs['Navbar Settings'].saves)
+    def test_framework_default_name_is_replaced_on_fresh_sites(self):
+        self.docs['Website Settings'].set('app_name','Frappe')
+        self.branding.apply_branding()
+        self.assertEqual('YousrERP',self.docs['Website Settings'].get('app_name'))
+
     def test_uninstall_preserves_replacement_logo_and_custom_name(self):
         self.docs['Website Settings'].set('app_name','Tenant ERP')
         self.branding.apply_branding(); self.branding.remove_owned_branding()

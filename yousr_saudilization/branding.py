@@ -15,7 +15,7 @@ SETTING_VALUES = {
 }
 
 def is_owned_or_empty(value):
-    return not value or value in LEGACY or str(value).startswith(ASSETS + "yousrerp-") or value == "YousrERP"
+    return not value or value in LEGACY or str(value).startswith(ASSETS + "yousrerp-") or value in {"YousrERP", "Frappe", "ERPNext"}
 
 def apply_branding():
     """Update only blank or this app's own values. Never overwrite a tenant logo."""
