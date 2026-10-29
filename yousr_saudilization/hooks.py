@@ -1,3 +1,5 @@
+from yousr_saudilization import __version__
+
 app_name = "yousr_saudilization"
 app_title = "YousrERP"
 app_publisher = "BOT Solutions LLC."
@@ -60,12 +62,12 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/yousr_saudilization/css/yousrerp-brand.css"
-app_include_js = "/assets/yousr_saudilization/js/yousrerp-brand.js"
+app_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
+app_include_js = f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}"
 
 # include js, css files in header of web template
-web_include_css = "/assets/yousr_saudilization/css/yousrerp-brand.css"
-web_include_js = "/assets/yousr_saudilization/js/yousrerp-brand.js"
+web_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
+web_include_js = f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "yousr_saudilization/public/scss/website"

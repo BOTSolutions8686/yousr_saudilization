@@ -15,3 +15,5 @@ For rollback, deploy the recorded previous revision and restore the backed-up br
 ## Demo media
 
 Use synthetic company/person/contact data only. Do not enable email, WhatsApp, payment or tax integrations. Record installed-module capabilities honestly; HR/payroll or other optional apps require actual installation and plan qualification. Preserve invoice QA drafts from the earlier billing acceptance. Capture Chrome at a consistent viewport with no private provider/admin tabs in frame; record useful end-to-end actions, not just mouse movement over an empty list.
+
+Asset URLs carry the app version so installed-site upgrades do not retain an older Desk script/stylesheet in browser cache. Bump the app version whenever these assets change.
