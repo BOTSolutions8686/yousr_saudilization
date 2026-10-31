@@ -63,7 +63,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 app_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
-app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-first-task.js?v={__version__}"]
+app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-menus.js?v={__version__}"]
 
 # include js, css files in header of web template
 web_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
@@ -302,3 +302,19 @@ after_migrate = ["yousr_saudilization.branding.apply_branding", "yousr_saudiliza
 # Extend supported native wizard hooks; never replace core setup operations.
 setup_wizard_requires = "assets/yousr_saudilization/js/yousrerp-setup.js"
 boot_session = "yousr_saudilization.onboarding.boot_session"
+
+# Customer subscriptions are managed in YousrERP, not through provider billing RPCs.
+_provider_billing_rpc = ("api", "send_verification_code", "verify_verification_code")
+_cloud_billing_rpc = (
+    "get_account_url", "get_billing", "get_plan_options", "change_plan",
+    "get_billing_profile", "save_billing_profile", "get_payment_gateways",
+    "add_payment_method", "confirm_payment_method", "create_payment_method_checkout",
+    "confirm_payment_method_checkout", "remove_payment_method", "reconcile_payment_setup",
+    "create_topup_checkout", "get_checkout_status",
+)
+override_whitelisted_methods = {
+    **{f"frappe.integrations.frappe_providers.frappecloud_billing.{name}":
+       "yousr_saudilization.managed_billing.unavailable" for name in _provider_billing_rpc},
+    **{f"frappe.integrations.frappe_providers.cloud_settings.{name}":
+       "yousr_saudilization.managed_billing.unavailable" for name in _cloud_billing_rpc},
+}

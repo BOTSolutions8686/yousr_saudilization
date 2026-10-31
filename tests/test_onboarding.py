@@ -88,4 +88,26 @@ class OnboardingTest(unittest.TestCase):
         self.assertEqual('Company A',boot['yousr_setup']['company_name'])
         self.assertEqual('',boot['yousr_setup']['email'])
 
+    def test_v16_app_cards_keep_permissions_and_routes_while_branding_default_names(self):
+        self.load(complete=True)
+        module=sys.modules['yousr_saudilization.onboarding']
+        apps=[{'app_name':'erpnext','app_title':'ERPNext','app_logo_url':'/assets/erpnext/images/erpnext-logo.svg','on_apps_screen':True,'app_route':'/desk/setup/home'}, {'app_name':'frappe','app_title':'Framework','on_apps_screen':False,'dock':[]}, {'app_name':'hrms','app_title':'Frappe HR','on_apps_screen':True}]
+        boot={'lang':'en','app_data':apps}
+        module.boot_session(boot)
+        self.assertEqual('YousrERP',apps[0]['app_title'])
+        self.assertEqual('/desk/setup/home',apps[0]['app_route'])
+        self.assertFalse(apps[1]['on_apps_screen'])
+        self.assertEqual([],apps[1]['dock'])
+        self.assertEqual('Workspace settings',apps[1]['app_title'])
+        self.assertEqual('People & payroll',apps[2]['app_title'])
+        self.assertNotIn('show_first_task',boot['yousr_setup'])
+
+    def test_tenant_custom_app_title_and_logo_are_preserved(self):
+        self.load(complete=True)
+        module=sys.modules['yousr_saudilization.onboarding']
+        app={'app_name':'erpnext','app_title':'My business','app_logo_url':'/files/tenant.svg','on_apps_screen':True}
+        module.boot_session({'app_data':[app]})
+        self.assertEqual('My business',app['app_title'])
+        self.assertEqual('/files/tenant.svg',app['app_logo_url'])
+
 if __name__=='__main__':unittest.main()

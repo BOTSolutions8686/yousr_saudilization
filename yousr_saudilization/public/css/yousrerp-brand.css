@@ -45,9 +45,5 @@ html.yousr-erp .setup-intro__hello { display: none !important; }
 html.yousr-erp .yousr-setup-welcome { max-width: 720px; font-size: clamp(28px, 4vw, 44px); line-height: 1.15; letter-spacing: -.035em; margin: 0 20px; }
 html.yousr-erp .yousr-setup-expectation { color: var(--text-muted); margin: 22px 20px 4px; font-size: 14px; }
 html.yousr-erp .yousr-setup-help { display: block; margin: 24px auto 12px; text-align: center; font-size: 14px; }
-html.yousr-erp .yousr-first-task { position: fixed; inset-inline-end: 24px; bottom: 24px; width: min(420px, calc(100vw - 32px)); padding: 24px; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 18px 60px #182b4320; background: var(--fg-color); color: var(--text-color); z-index: 1040; }
-html.yousr-erp .yousr-first-task h2 { font-size: 24px; margin: 0 0 12px; }
-html.yousr-erp .yousr-first-task-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
-html.yousr-erp .yousr-first-task-actions button { border: 0; border-radius: 8px; padding: 10px 14px; background: #2387f7; color: white; }
-html.yousr-erp .yousr-first-task-actions a { padding: 10px 0; }
-html.yousr-erp .yousr-first-task-dismiss { background: none; border: 0; padding: 0; color: var(--text-muted); text-decoration: underline; }
+html.yousr-erp .yousr-about-logo { width: 180px; max-width: 100%; margin-bottom: 20px; }
+html.yousr-erp[data-theme="dark"] .yousr-about-logo { content: url("/assets/yousr_saudilization/images/yousrerp-compact-dark.svg"); }

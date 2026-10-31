@@ -7,7 +7,6 @@ import frappe
 
 PORTALS = {"https://yousrerp.com", "https://stage.yousrerp.com"}
 INDUSTRIES = {"Manufacturing", "Retail", "Wholesale / Distribution", "E-commerce", "Services / Consulting", "Construction / Real Estate", "Technology / Software", "Healthcare", "Education", "Agriculture", "Food & Beverage", "Non Profit", "Other"}
-TASKS = {"sales", "stock", "purchasing", "accounting", "projects", "manufacturing", "hr"}
 
 
 def _context():
@@ -37,8 +36,6 @@ def boot_session(bootinfo):
     ui = {
         "portal_url": portal,
         "help_url": portal + "/help-and-sessions",
-        "first_task": context.get("first_task") if context.get("first_task") in TASKS else "sales",
-        "show_first_task": context.get("show_first_task") is True,
     }
     if not setup_complete and admin:
         ui.update({
@@ -52,6 +49,24 @@ def boot_session(bootinfo):
     if (not setup_complete or context.get("managed_setup") is True) and not frappe.conf.get("yousr_external_diagnostics_enabled"):
         bootinfo["enable_telemetry"] = False
     bootinfo["yousr_setup"] = ui
+    # v16's apps screen reads app_data; keep native permission and route metadata.
+    ar = str(bootinfo.get("lang") or "en").startswith("ar")
+    for app in bootinfo.get("app_data") or []:
+        name = app.get("app_name")
+        title = app.get("app_title")
+        if name == "erpnext" and title in {"ERPNext", "" , None}:
+            app["app_title"] = "YousrERP"
+        elif name == "frappe" and title in {"Framework", "Frappe Framework", "Frappe", "", None}:
+            app["app_title"] = "إعدادات مساحة العمل" if ar else "Workspace settings"
+        elif name == "hrms" and title in {"Frappe HR", "HRMS", "HR", "", None}:
+            app["app_title"] = "الموارد البشرية والرواتب" if ar else "People & payroll"
+        logo = app.get("app_logo_url") or ""
+        defaults = {"/assets/erpnext/images/erpnext-logo.svg", "/assets/frappe/images/frappe-framework-logo.svg", "/assets/frappe/images/frappe-logo.svg", "/assets/hrms/images/frappe-hr-logo.svg"}
+        if not logo or logo in defaults:
+            asset = {"erpnext":"yousrerp-favicon.svg", "frappe":"yousrerp-settings.svg", "hrms":"yousrerp-people.svg"}.get(name)
+            if asset:
+                app["app_logo_url"] = "/assets/yousr_saudilization/images/" + asset
+
     for app in (bootinfo.get("apps_data") or {}).get("apps", []):
         if app.get("name") == "erpnext":
             app["title"] = "YousrERP"
