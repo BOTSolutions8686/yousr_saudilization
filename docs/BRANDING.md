@@ -17,3 +17,5 @@ For rollback, deploy the recorded previous revision and restore the backed-up br
 Use synthetic company/person/contact data only. Do not enable email, WhatsApp, payment or tax integrations. Record installed-module capabilities honestly; HR/payroll or other optional apps require actual installation and plan qualification. Preserve invoice QA drafts from the earlier billing acceptance. Capture Chrome at a consistent viewport with no private provider/admin tabs in frame; record useful end-to-end actions, not just mouse movement over an empty list.
 
 Asset URLs carry the app version so installed-site upgrades do not retain an older Desk script/stylesheet in browser cache. Bump the app version whenever these assets change.
+
+31 October: the fresh v16 setup intro also hardcodes the framework logo. Version0.1.3 replaces only that exact ERPNext-owned image, preserving tenant images. Package rehearsal uses the unmerged `codex/yousrerp-branding-20261030` branch; do not assume `main` contains these changes.
