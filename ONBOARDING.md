@@ -13,3 +13,5 @@ Source names, licence notices, app identifiers and backend routes remain intact.
 Rollback: restore the previous app revision/image using a verified Cloud backup; disable portal context transfer. Do not delete companies or rewrite confirmed workspace identities to undo presentation changes.
 
 Migration acceptance: fresh System Settings has no language/time zone until native setup. Set only the telemetry boolean using the single-value database API; never save the incomplete settings document or invent required preferences. Version0.2.0 migration failed safely on QA and Cloud restored0.1.3;0.2.1 fixes this exact failure.
+
+The native setup asset loader requires a plain `.js` hook path and supplies its own asset version. Do not append a query-string version in `setup_wizard_requires`;0.2.1 passed migration but this loader rejected its versioned path.0.2.2 corrects the hook contract.

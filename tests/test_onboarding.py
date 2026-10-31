@@ -70,4 +70,13 @@ class OnboardingTest(unittest.TestCase):
         module.prepare_new_workspace()
         self.assertEqual([],calls)
 
+    def test_native_setup_loader_receives_plain_javascript_asset_path(self):
+        from pathlib import Path
+        import ast
+        tree=ast.parse((Path(__file__).parents[1]/'yousr_saudilization/hooks.py').read_text())
+        assignment=next(node for node in tree.body if isinstance(node,ast.Assign) and any(isinstance(target,ast.Name) and target.id=='setup_wizard_requires' for target in node.targets))
+        path=ast.literal_eval(assignment.value)
+        self.assertTrue(path.endswith('.js'))
+        self.assertNotIn('?',path)
+
 if __name__=='__main__':unittest.main()

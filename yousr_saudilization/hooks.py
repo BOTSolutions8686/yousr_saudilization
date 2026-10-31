@@ -300,5 +300,5 @@ export_python_type_annotations = True
 after_migrate = ["yousr_saudilization.branding.apply_branding", "yousr_saudilization.onboarding.prepare_new_workspace"]
 
 # Extend supported native wizard hooks; never replace core setup operations.
-setup_wizard_requires = f"assets/yousr_saudilization/js/yousrerp-setup.js?v={__version__}"
+setup_wizard_requires = "assets/yousr_saudilization/js/yousrerp-setup.js"
 boot_session = "yousr_saudilization.onboarding.boot_session"
