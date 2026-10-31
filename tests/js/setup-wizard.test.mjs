@@ -17,3 +17,13 @@ test('verified email and each workspace company remain editable suggestions',()=
   assert.equal(slides[1].fields[0].default,company);assert.equal(slides[1].fields[0].read_only,undefined);
  }
 });
+
+test('company suggestions work when ERP slide registration runs after the custom hook',()=>{
+ const events={},company={name:'organization',fields:[{fieldname:'company_name',reqd:1}]};
+ const frappe={boot:{lang:'en',yousr_setup:{company_name:'Company B'}},setup:{slides:[],on:(e,fn)=>events[e]=fn}};
+ const erpnext={setup:{slides_settings:[company]}};
+ vm.runInNewContext(code,{frappe,erpnext,document:{}});events.before_load();
+ frappe.setup.slides.push(company);
+ assert.equal(frappe.setup.slides[0].fields[0].default,'Company B');
+ assert.equal(frappe.setup.slides[0].fields[0].read_only,undefined);
+});

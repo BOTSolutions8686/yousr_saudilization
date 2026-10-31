@@ -12,7 +12,11 @@
   };
   frappe.setup.on('before_load', () => {
     frappe.setup.intro_apps = [{logo:'/assets/yousr_saudilization/images/yousrerp-favicon.svg', setup_wizard_text:t('Your workspace is ready. Let’s make it yours.','مساحة عملك جاهزة. لنجهزها لأعمالك.')}];
-    for (const slide of frappe.setup.slides) {
+    // Assets load concurrently. Customize the native settings objects too, so
+    // ERP app slides receive suggestions even if their registration hook runs later.
+    const appSlides = typeof erpnext !== 'undefined' ? (erpnext.setup?.slides_settings || []) : [];
+    const slides = new Set([...frappe.setup.slides, ...(frappe.setup.slides_settings || []), ...appSlides]);
+    for (const slide of slides) {
       if (slide.name === 'welcome') {
         slide.title = t('A familiar starting point','بداية تناسب أعمالك');
         slide.help = t('Check your language, country and currency. You can keep the suggested choices.','راجع اللغة والدولة والعملة. يمكنك استخدام الخيارات المقترحة.');

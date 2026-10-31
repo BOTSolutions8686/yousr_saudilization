@@ -15,3 +15,5 @@ Rollback: restore the previous app revision/image using a verified Cloud backup;
 Migration acceptance: fresh System Settings has no language/time zone until native setup. Set only the telemetry boolean using the single-value database API; never save the incomplete settings document or invent required preferences. Version0.2.0 migration failed safely on QA and Cloud restored0.1.3;0.2.1 fixes this exact failure.
 
 The native setup asset loader requires a plain `.js` hook path and supplies its own asset version. Do not append a query-string version in `setup_wizard_requires`;0.2.1 passed migration but this loader rejected its versioned path.0.2.2 corrects the hook contract.
+
+Assets are loaded concurrently. The extension updates the native slide-settings objects as well as registered slides, preserving their handlers and making company suggestions independent of script arrival/registration order.
