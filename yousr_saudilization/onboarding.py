@@ -75,7 +75,7 @@ def boot_session(bootinfo):
     for app in (bootinfo.get("apps_data") or {}).get("apps", []):
         if app.get("name") == "erpnext":
             app["title"] = "YousrERP"
-            if app.get("logo") in {"/assets/erpnext/images/erpnext-logo.svg", "", None}:
+            if not app.get("logo") or (isinstance(app.get("logo"), str) and app.get("logo") == "/assets/erpnext/images/erpnext-logo.svg"):
                 app["logo"] = "/assets/yousr_saudilization/images/yousrerp-favicon.svg"
             app["setup_wizard_text"] = "Your workspace is ready. Let’s make it yours."
         elif app.get("name") == "hrms":
