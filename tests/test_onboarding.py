@@ -1,0 +1,72 @@
+"""Boundary checks for setup-only context and native privilege preservation."""
+import importlib
+import sys
+import types
+import unittest
+
+class OnboardingTest(unittest.TestCase):
+    def load(self, context=None, user='Administrator', roles=None, complete=False):
+        sys.modules['frappe'] = types.SimpleNamespace(conf={'yousr_onboarding_context':context or {}}, session=types.SimpleNamespace(user=user), get_roles=lambda:roles or [])
+        sys.modules.pop('yousr_saudilization.onboarding',None)
+        module=importlib.import_module('yousr_saudilization.onboarding')
+        boot={'setup_complete':complete, 'enable_telemetry':True, 'apps_data':{'apps':[{'name':'erpnext','title':'ERPNext','logo':'/assets/erpnext/images/erpnext-logo.svg'}]}}
+        module.boot_session(boot)
+        return boot
+
+    def test_unverified_email_and_unsafe_portal_are_not_exposed(self):
+        boot=self.load({'email':'private@example.invalid','email_verified':False,'portal_url':'https://evil.invalid','industry':'arbitrary','company_name':' Demo '})
+        self.assertEqual('',boot['yousr_setup']['email'])
+        self.assertEqual('https://yousrerp.com',boot['yousr_setup']['portal_url'])
+        self.assertEqual('',boot['yousr_setup']['industry'])
+        self.assertEqual('Demo',boot['yousr_setup']['company_name'])
+        self.assertFalse(boot['enable_telemetry'])
+        self.assertEqual('erpnext',boot['apps_data']['apps'][0]['name'])
+        self.assertEqual('YousrERP',boot['apps_data']['apps'][0]['title'])
+
+    def test_only_verified_contact_is_prefilled_for_workspace_admin(self):
+        boot=self.load({'email':'owned@example.invalid','email_verified':True,'portal_url':'https://stage.yousrerp.com','industry':'Retail'})
+        self.assertEqual('owned@example.invalid',boot['yousr_setup']['email'])
+        self.assertEqual('Retail',boot['yousr_setup']['industry'])
+        self.assertEqual('https://stage.yousrerp.com/help-and-sessions',boot['yousr_setup']['help_url'])
+
+    def test_guests_and_regular_staff_do_not_receive_owner_profile(self):
+        self.assertNotIn('yousr_setup',self.load({'full_name':'Owner'},user='Guest'))
+        boot=self.load({'full_name':'Owner','email':'owner@example.invalid','email_verified':True},user='staff@example.invalid')
+        self.assertNotIn('full_name',boot['yousr_setup'])
+        self.assertNotIn('email',boot['yousr_setup'])
+
+    def test_two_workspaces_keep_their_company_context_separate(self):
+        first=self.load({'company_name':'Company A','full_name':'Same Owner','email':'personal@example.invalid','email_verified':True})
+        second=self.load({'company_name':'Company B','full_name':'Same Owner','email':'personal@example.invalid','email_verified':True})
+        self.assertEqual('Company A',first['yousr_setup']['company_name'])
+        self.assertEqual('Company B',second['yousr_setup']['company_name'])
+        self.assertEqual('personal@example.invalid',first['yousr_setup']['email'])
+
+    def test_real_boot_sysdefaults_completed_flag_keeps_existing_tenant_preference(self):
+        self.load()
+        module=sys.modules['yousr_saudilization.onboarding']
+        boot={'sysdefaults':{'setup_complete':True},'enable_telemetry':True}
+        module.boot_session(boot)
+        self.assertTrue(boot['enable_telemetry'])
+        self.assertNotIn('company_name',boot['yousr_setup'])
+
+    def test_existing_configured_tenant_keeps_telemetry_preference_and_custom_icon(self):
+        boot=self.load(complete=True)
+        self.assertTrue(boot['enable_telemetry'])
+        self.assertNotIn('company_name',boot['yousr_setup'])
+
+    def test_new_workspace_diagnostics_default_does_not_change_established_tenants(self):
+        self.load()
+        module=sys.modules['yousr_saudilization.onboarding']
+        calls=[]
+        settings=types.SimpleNamespace(meta=types.SimpleNamespace(has_field=lambda field:True),get=lambda field:1,set=lambda field,value:calls.append((field,value)),save=lambda **kwargs:calls.append('saved'))
+        module.frappe.is_setup_complete=lambda:False
+        module.frappe.get_single=lambda name:settings
+        module.prepare_new_workspace()
+        self.assertEqual([('enable_telemetry',0),'saved'],calls)
+        calls.clear()
+        module.frappe.is_setup_complete=lambda:True
+        module.prepare_new_workspace()
+        self.assertEqual([],calls)
+
+if __name__=='__main__':unittest.main()

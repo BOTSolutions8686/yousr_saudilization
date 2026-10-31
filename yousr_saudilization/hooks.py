@@ -63,7 +63,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 app_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
-app_include_js = f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}"
+app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-first-task.js?v={__version__}"]
 
 # include js, css files in header of web template
 web_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
@@ -297,4 +297,8 @@ export_python_type_annotations = True
 
 
 # Updates existing app-owned branding without replacing a tenant-selected logo.
-after_migrate = "yousr_saudilization.branding.apply_branding"
+after_migrate = ["yousr_saudilization.branding.apply_branding", "yousr_saudilization.onboarding.prepare_new_workspace"]
+
+# Extend supported native wizard hooks; never replace core setup operations.
+setup_wizard_requires = f"assets/yousr_saudilization/js/yousrerp-setup.js?v={__version__}"
+boot_session = "yousr_saudilization.onboarding.boot_session"
