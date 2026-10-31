@@ -79,4 +79,13 @@ class OnboardingTest(unittest.TestCase):
         self.assertTrue(path.endswith('.js'))
         self.assertNotIn('?',path)
 
+    def test_erp_yes_no_boot_label_does_not_hide_new_company_suggestions(self):
+        self.load({'company_name':'Company A'},complete=False)
+        module=sys.modules['yousr_saudilization.onboarding']
+        # ERP's earlier boot hook uses the string "No", which is truthy in Python.
+        boot={'setup_complete':'No','sysdefaults':{'setup_complete':False}}
+        module.boot_session(boot)
+        self.assertEqual('Company A',boot['yousr_setup']['company_name'])
+        self.assertEqual('',boot['yousr_setup']['email'])
+
 if __name__=='__main__':unittest.main()
