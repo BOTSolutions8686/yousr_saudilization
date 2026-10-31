@@ -8,10 +8,24 @@ document.documentElement.classList.add("yousr-erp");
       image.src = "/assets/yousr_saudilization/images/yousrerp-favicon.svg";
       image.alt = "YousrERP";
     });
+    // Only the native setup checklist subtitle: retain counters, controls and
+    // document content, and keep the surrounding English/Arabic translation.
+    document.querySelectorAll('.onboarding-widget-box .widget-subtitle').forEach((subtitle) => {
+      subtitle.childNodes.forEach((node) => {
+        if (node.nodeType === 3 && node.textContent.includes('ERPNext')) {
+          node.textContent = node.textContent.replace(/\bERPNext\b/g, 'YousrERP');
+        }
+      });
+    });
   };
   const start = () => {
     brandRail();
-    new MutationObserver(brandRail).observe(document.body, {childList: true, subtree: true});
+    let scheduled = false;
+    new MutationObserver(() => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => { scheduled = false; brandRail(); });
+    }).observe(document.body, {childList: true, characterData: true, subtree: true});
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, {once: true});
   else start();
