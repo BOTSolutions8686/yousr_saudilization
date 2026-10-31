@@ -11,3 +11,5 @@ For a newly unconfigured workspace, external diagnostics default off. Establishe
 Source names, licence notices, app identifiers and backend routes remain intact. Customer presentation uses YousrERP branding; tenant-selected logos remain their own. Core Frappe/ERPNext files are not patched.
 
 Rollback: restore the previous app revision/image using a verified Cloud backup; disable portal context transfer. Do not delete companies or rewrite confirmed workspace identities to undo presentation changes.
+
+Migration acceptance: fresh System Settings has no language/time zone until native setup. Set only the telemetry boolean using the single-value database API; never save the incomplete settings document or invent required preferences. Version0.2.0 migration failed safely on QA and Cloud restored0.1.3;0.2.1 fixes this exact failure.

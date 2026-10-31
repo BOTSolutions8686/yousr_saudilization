@@ -68,5 +68,6 @@ def prepare_new_workspace():
         return
     settings = frappe.get_single("System Settings")
     if settings.meta.has_field("enable_telemetry") and settings.get("enable_telemetry"):
-        settings.set("enable_telemetry", 0)
-        settings.save(ignore_permissions=True)
+        # A fresh site has no language/time zone yet. Do not save the whole
+        # mandatory setup document merely to change this one boolean preference.
+        frappe.db.set_single_value("System Settings", "enable_telemetry", 0)

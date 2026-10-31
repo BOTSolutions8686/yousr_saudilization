@@ -62,8 +62,9 @@ class OnboardingTest(unittest.TestCase):
         settings=types.SimpleNamespace(meta=types.SimpleNamespace(has_field=lambda field:True),get=lambda field:1,set=lambda field,value:calls.append((field,value)),save=lambda **kwargs:calls.append('saved'))
         module.frappe.is_setup_complete=lambda:False
         module.frappe.get_single=lambda name:settings
+        module.frappe.db=types.SimpleNamespace(set_single_value=lambda doctype,field,value:calls.append((doctype,field,value)))
         module.prepare_new_workspace()
-        self.assertEqual([('enable_telemetry',0),'saved'],calls)
+        self.assertEqual([('System Settings','enable_telemetry',0)],calls)
         calls.clear()
         module.frappe.is_setup_complete=lambda:True
         module.prepare_new_workspace()
