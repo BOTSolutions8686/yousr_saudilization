@@ -17,3 +17,5 @@ Migration acceptance: fresh System Settings has no language/time zone until nati
 The native setup asset loader requires a plain `.js` hook path and supplies its own asset version. Do not append a query-string version in `setup_wizard_requires`;0.2.1 passed migration but this loader rejected its versioned path.0.2.2 corrects the hook contract.
 
 Assets are loaded concurrently. The extension updates the native slide-settings objects as well as registered slides, preserving their handlers and making company suggestions independent of script arrival/registration order.
+
+Owner suggestions are gated using the authoritative server `is_setup_complete()` check, independent of intermediate boot fields and hook order. Established workspaces never receive the owner profile just because a boot dictionary is incomplete.

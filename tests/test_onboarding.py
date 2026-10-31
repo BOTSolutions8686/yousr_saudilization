@@ -6,7 +6,7 @@ import unittest
 
 class OnboardingTest(unittest.TestCase):
     def load(self, context=None, user='Administrator', roles=None, complete=False):
-        sys.modules['frappe'] = types.SimpleNamespace(conf={'yousr_onboarding_context':context or {}}, session=types.SimpleNamespace(user=user), get_roles=lambda:roles or [])
+        sys.modules['frappe'] = types.SimpleNamespace(conf={'yousr_onboarding_context':context or {}}, session=types.SimpleNamespace(user=user), get_roles=lambda:roles or [], is_setup_complete=lambda:complete)
         sys.modules.pop('yousr_saudilization.onboarding',None)
         module=importlib.import_module('yousr_saudilization.onboarding')
         boot={'setup_complete':complete, 'enable_telemetry':True, 'apps_data':{'apps':[{'name':'erpnext','title':'ERPNext','logo':'/assets/erpnext/images/erpnext-logo.svg'}]}}
@@ -42,10 +42,10 @@ class OnboardingTest(unittest.TestCase):
         self.assertEqual('Company B',second['yousr_setup']['company_name'])
         self.assertEqual('personal@example.invalid',first['yousr_setup']['email'])
 
-    def test_real_boot_sysdefaults_completed_flag_keeps_existing_tenant_preference(self):
-        self.load()
+    def test_authoritative_completed_state_preserves_existing_tenant_even_during_partial_boot(self):
+        self.load(complete=True)
         module=sys.modules['yousr_saudilization.onboarding']
-        boot={'sysdefaults':{'setup_complete':True},'enable_telemetry':True}
+        boot={'sysdefaults':{'setup_complete':False},'enable_telemetry':True}
         module.boot_session(boot)
         self.assertTrue(boot['enable_telemetry'])
         self.assertNotIn('company_name',boot['yousr_setup'])

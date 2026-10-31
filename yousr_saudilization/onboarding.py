@@ -32,7 +32,7 @@ def boot_session(bootinfo):
     portal = _text(context.get("portal_url"), 100).rstrip("/")
     if portal not in PORTALS:
         portal = "https://yousrerp.com"
-    setup_complete = bool(bootinfo.get("setup_complete", (bootinfo.get("sysdefaults") or {}).get("setup_complete", False)))
+    setup_complete = bool(frappe.is_setup_complete())
     admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
     ui = {
         "portal_url": portal,
