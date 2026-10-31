@@ -60,9 +60,14 @@ def boot_session(bootinfo):
             app["app_title"] = "إعدادات مساحة العمل" if ar else "Workspace settings"
         elif name == "hrms" and title in {"Frappe HR", "HRMS", "HR", "", None}:
             app["app_title"] = "الموارد البشرية والرواتب" if ar else "People & payroll"
+        if name not in {"erpnext", "frappe", "hrms"}:
+            continue
         logo = app.get("app_logo_url") or ""
+        # Hook defaults can be a one-item list; unrelated plugins stay untouched.
+        if isinstance(logo, (list, tuple)):
+            logo = logo[0] if logo else ""
         defaults = {"/assets/erpnext/images/erpnext-logo.svg", "/assets/frappe/images/frappe-framework-logo.svg", "/assets/frappe/images/frappe-logo.svg", "/assets/hrms/images/frappe-hr-logo.svg"}
-        if not logo or logo in defaults:
+        if isinstance(logo, str) and (not logo or logo in defaults):
             asset = {"erpnext":"yousrerp-favicon.svg", "frappe":"yousrerp-settings.svg", "hrms":"yousrerp-people.svg"}.get(name)
             if asset:
                 app["app_logo_url"] = "/assets/yousr_saudilization/images/" + asset

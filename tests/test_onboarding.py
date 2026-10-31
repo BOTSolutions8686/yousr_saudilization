@@ -110,4 +110,13 @@ class OnboardingTest(unittest.TestCase):
         self.assertEqual('My business',app['app_title'])
         self.assertEqual('/files/tenant.svg',app['app_logo_url'])
 
+    def test_list_valued_hook_icons_do_not_break_boot_or_rebrand_unrelated_plugins(self):
+        self.load(complete=True)
+        module=sys.modules['yousr_saudilization.onboarding']
+        plugin={'app_name':'ksa_compliance','app_title':'Saudi e-invoicing','app_logo_url':['/assets/frappe/images/frappe-framework-logo.svg'],'on_apps_screen':False}
+        erp={'app_name':'erpnext','app_title':'ERPNext','app_logo_url':['/assets/erpnext/images/erpnext-logo.svg']}
+        module.boot_session({'app_data':[plugin,erp]})
+        self.assertEqual(['/assets/frappe/images/frappe-framework-logo.svg'],plugin['app_logo_url'])
+        self.assertEqual('/assets/yousr_saudilization/images/yousrerp-favicon.svg',erp['app_logo_url'])
+
 if __name__=='__main__':unittest.main()
