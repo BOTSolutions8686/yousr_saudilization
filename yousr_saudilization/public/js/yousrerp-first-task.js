@@ -17,7 +17,9 @@
     }
     const help=document.createElement('a');help.href=(['https://yousrerp.com','https://stage.yousrerp.com'].includes(setup.portal_url)?setup.portal_url:'https://yousrerp.com')+'/help-and-sessions';help.target='_blank';help.rel='noopener noreferrer';help.textContent=t('Ask for setup help','اطلب مساعدة في الإعداد');actions.append(help);card.append(actions);
     const close=document.createElement('button');close.type='button';close.className='yousr-first-task-dismiss';close.textContent=t('I’m ready to explore','سأستكشف مساحة العمل');close.onclick=()=>{try{localStorage.setItem(key,'done')}catch(_){}card.remove()};card.append(close);
-    (document.querySelector('#body')||document.body).append(card);
+    // Desk replaces its route container after navigation. Keep this dismissible
+    // account guide outside that container so rendering cannot silently remove it.
+    document.body.append(card);
   };
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded",mount,{once:true}); else mount();
 })();
