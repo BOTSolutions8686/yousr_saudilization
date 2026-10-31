@@ -1,4 +1,4 @@
-### Yousr Saudilization
+### YousrERP branding and Saudi fields
 
 Yousr ERP Custom Application for custom branding, custom fields and customizations
 
@@ -8,7 +8,7 @@ You can install this app using the [bench](https://github.com/frappe/bench) CLI:
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
-bench get-app https://github.com/khayamkhan852/yousr_saudilization.git --branch main
+bench get-app https://github.com/BOTSolutions8686/yousr_saudilization.git --branch main
 bench --site site_name install-app yousr_saudilization
 ```
 
@@ -38,3 +38,5 @@ This app can use GitHub Actions for CI. The following workflows are configured:
 ### License
 
 mit
+
+Branding uses the YousrERP wordmark and BOT Solutions blue/navy identity, including native light/dark themes. Install/migrate updates only blank or app-owned logos; tenant logos are preserved. App identifier and existing Saudi fields/print-format names remain compatible. See `docs/BRANDING.md` for deployment and rollback.

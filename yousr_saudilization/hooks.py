@@ -1,8 +1,10 @@
+from yousr_saudilization import __version__
+
 app_name = "yousr_saudilization"
-app_title = "Yousr Saudilization"
-app_publisher = "Khayam Khan"
+app_title = "YousrERP"
+app_publisher = "BOT Solutions LLC."
 app_description = "Yousr ERP Custom Application for custom branding, custom fields and customizations"
-app_email = "khayamkhan852@gmail.com"
+app_email = "hello@yousrerp.com"
 app_license = "mit"
 
 # Apps
@@ -60,12 +62,12 @@ fixtures = [
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/yousr_saudilization/css/yousr_saudilization.css"
-# app_include_js = "/assets/yousr_saudilization/js/yousr_saudilization.js"
+app_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
+app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-menus.js?v={__version__}"]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/yousr_saudilization/css/yousr_saudilization.css"
-# web_include_js = "/assets/yousr_saudilization/js/yousr_saudilization.js"
+web_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
+web_include_js = f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}"
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "yousr_saudilization/public/scss/website"
@@ -293,3 +295,26 @@ export_python_type_annotations = True
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+
+# Updates existing app-owned branding without replacing a tenant-selected logo.
+after_migrate = ["yousr_saudilization.branding.apply_branding", "yousr_saudilization.onboarding.prepare_new_workspace"]
+
+# Extend supported native wizard hooks; never replace core setup operations.
+setup_wizard_requires = "assets/yousr_saudilization/js/yousrerp-setup.js"
+boot_session = "yousr_saudilization.onboarding.boot_session"
+
+# Customer subscriptions are managed in YousrERP, not through provider billing RPCs.
+_provider_billing_rpc = ("api", "send_verification_code", "verify_verification_code")
+_cloud_billing_rpc = (
+    "get_account_url", "get_billing", "get_plan_options", "change_plan",
+    "get_billing_profile", "save_billing_profile", "get_payment_gateways",
+    "add_payment_method", "confirm_payment_method", "create_payment_method_checkout",
+    "confirm_payment_method_checkout", "remove_payment_method", "reconcile_payment_setup",
+    "create_topup_checkout", "get_checkout_status",
+)
+override_whitelisted_methods = {
+    **{f"frappe.integrations.frappe_providers.frappecloud_billing.{name}":
+       "yousr_saudilization.managed_billing.unavailable" for name in _provider_billing_rpc},
+    **{f"frappe.integrations.frappe_providers.cloud_settings.{name}":
+       "yousr_saudilization.managed_billing.unavailable" for name in _cloud_billing_rpc},
+}

@@ -1,0 +1,49 @@
+/* YousrERP / BOT Solutions. Keep Frappe's native light/dark and RTL behavior. */
+html.yousr-erp {
+  --primary: #176bc2;
+  --primary-color: #176bc2;
+  --btn-primary: #176bc2;
+  --brand-primary: #2387f7;
+  --text-on-primary: #fff;
+  --yousr-focus: #176bc2;
+}
+html.yousr-erp[data-theme="light"] {
+  --bg-color: #f4f7fc;
+  --navbar-bg: #fff;
+  --card-bg: #fff;
+  --text-color: #182b43;
+}
+html.yousr-erp[data-theme="dark"] {
+  --primary: #68adff;
+  --primary-color: #68adff;
+  --btn-primary: #176bc2;
+  --bg-color: #131b27;
+  --navbar-bg: #182333;
+  --card-bg: #1b283a;
+  --text-color: #edf3fb;
+  --yousr-focus: #9acaff;
+}
+html.yousr-erp .btn-primary { background: var(--btn-primary); color: #fff; border-color: var(--btn-primary); }
+html.yousr-erp .btn-primary:hover { background: #125ba6; border-color: #125ba6; }
+html.yousr-erp :is(a,button,input,select,textarea):focus-visible { outline: 2px solid var(--yousr-focus); outline-offset: 3px; }
+html.yousr-erp .navbar-home img.app-logo { width: 132px; max-height: 30px; object-fit: contain; }
+html.yousr-erp[data-theme="dark"] .navbar-home img.app-logo[src*="yousr_saudilization"] { content: url("/assets/yousr_saudilization/images/yousrerp-compact-dark.svg"); }
+html.yousr-erp .page-card { border-radius: 16px; }
+html.yousr-erp .page-card-head img { max-height: 100px; width: auto; }
+html.yousr-erp[data-theme="dark"] .page-card-head img[src*="yousr_saudilization"] { content: url("/assets/yousr_saudilization/images/yousrerp-square-dark.svg"); }
+@media (max-width: 575px) { html.yousr-erp .navbar-home img.app-logo { width: 105px; } }
+@media (prefers-reduced-motion: reduce) { html.yousr-erp { scroll-behavior: auto; } }
+/* Frappe v16 Espresso navigation and primary actions. */
+html.yousr-erp .dock .header-logo img { width: 32px; height: 32px; object-fit: contain; }
+html.yousr-erp .dock .dock-item.active { color: #176bc2; background-color: #e8f2ff; }
+html.yousr-erp[data-theme="dark"] .dock .dock-item.active { color: #9acaff; background-color: #203c5c; }
+html.yousr-erp .es-button.primary-action[data-variant="solid"] { background-color: #176bc2; color: #fff; }
+html.yousr-erp .es-button.primary-action[data-variant="solid"]:hover { background-color: #125ba6; }
+
+/* Branded setup, retaining the native form and validation. */
+html.yousr-erp .setup-intro__hello { display: none !important; }
+html.yousr-erp .yousr-setup-welcome { max-width: 720px; font-size: clamp(28px, 4vw, 44px); line-height: 1.15; letter-spacing: -.035em; margin: 0 20px; }
+html.yousr-erp .yousr-setup-expectation { color: var(--text-muted); margin: 22px 20px 4px; font-size: 14px; }
+html.yousr-erp .yousr-setup-help { display: block; margin: 24px auto 12px; text-align: center; font-size: 14px; }
+html.yousr-erp .yousr-about-logo { width: 180px; max-width: 100%; margin-bottom: 20px; }
+html.yousr-erp[data-theme="dark"] .yousr-about-logo { content: url("/assets/yousr_saudilization/images/yousrerp-compact-dark.svg"); }
