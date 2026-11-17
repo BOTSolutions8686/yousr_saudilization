@@ -25,3 +25,47 @@ Owner suggestions are gated using the authoritative server `is_setup_complete()`
 The app adapts only native avatar dropdowns, using the original Dropdown component for keyboard/focus and retaining existing profile, theme, settings and logout callbacks. About is a branded product dialog; support and subscription billing open the owned portal in a separate tab. All other dropdowns remain untouched. V16 app-card metadata replaces only framework-default titles/icons while preserving native routes, permission flags and tenant custom branding.
 
 Provider billing/Cloud-account login RPC shortcuts are denied through explicit supported whitelist overrides. Normal ERP accounting, setup, Cloud provisioning/SSO and operator-side Cloud access are not overridden. The frontend provider-settings button is hidden without changing `is_fc_site`, roles or site limits. Native billing proxy read-only denial probes are required in live QA; do not invoke charges, top-ups or plan changes as a test. Original source/licence notices remain intact.
+
+## Optional practice data (0.3.0 candidate — QA required before rollout)
+
+The last native company slide offers an unchecked EN/AR choice. A supported
+`setup_wizard_success` hook queues work only after the real company setup
+succeeds. It never replaces core setup handlers or runs demo seeding during
+install/migration. Existing configured sites receive no new data automatically.
+The `yousr_demo_enabled=false` site setting hides/disables new demo requests;
+existing practice isolation guards remain active so disabling UI cannot mix data.
+
+Practice data uses `Yousr Practice - DEMO`, prefix `YOUSR-DEMO-`, separate customer,
+supplier/item groups and buying/selling price lists. The real company and global
+company defaults must remain unchanged. Masters are site-global in ERPNext, so
+we explicitly enforce both directions of the boundary on native document save:
+DEMO links cannot enter real-company transactions; real masters cannot enter the
+practice company. The records retain their DEMO identity and cannot be renamed
+or merged. Draft quotations/purchase orders use explicit fictional values.
+All practice-company submissions are blocked (no posted stock/accounting,
+payments or ZATCA). Real documents retain native validation and submit behavior.
+No invoices, legal identities, tax credentials, contacts, emails or messages
+are seeded. This deliberately starts with draft exploration, not a copy of v15's
+legacy generator or a functioning tax sandbox.
+
+`Yousr Demo Setup` is a System-Manager-readable singleton with an exact owned
+record manifest. The job uses a site-scoped lock and savepoint; failure rolls
+back its practice changes and records a fixed error category, without undoing
+native setup. Duplicate/retried setup does not reseed Ready data. Failed seeds
+can retry only if no reserved company/partial manifest exists. Existing name
+collisions fail closed; unrelated records are never adopted or overwritten.
+
+The separate practice page labels all ZATCA response examples SIMULATED and
+explains example acceptance/rejection and totals. It never modifies native
+invoice tax status or claims actual clearance/reporting. Real sandbox tests
+need a separately isolated test environment and scoped test credentials; never
+use production CSIDs or submit these examples to a live endpoint.
+
+Release gate: disposable Grow QA site; verify migration, optional on/off, real
+company defaults, exact seeded records, failed/repeated job behavior, both-way
+mixing rejection, invoice/payment/stock-submit rejection, tax credential refusal,
+ordinary real-company drafts unaffected, EN/AR phone/laptop UI, and zero external
+messages or tax requests. No live customer bench rollout before acceptance.
+Rollback is previous app image plus pre-update backup; do not uninstall/drop the
+state or isolation guards while practice records remain. No automatic deletion
+or cleanup of customer-created records is included in this initial version.

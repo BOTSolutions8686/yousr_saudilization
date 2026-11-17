@@ -39,6 +39,13 @@
         slide.title = t('Your company, ready to work','جهّز شركتك للعمل');
         slide.help = t('Add your company name and choose when your financial year starts. Our team can help.','أضف اسم شركتك وحدد بداية السنة المالية. فريقنا جاهز للمساعدة.');
         defaultValue(slide, 'company_name', context.company_name);
+        if (context.demo_available && !field(slide,'yousr_load_demo')) {
+          slide.fields.push({fieldtype:'Section Break',fieldname:'yousr_practice_section'});
+          slide.fields.push({fieldtype:'Check',fieldname:'yousr_load_demo',default:0,
+            label:t('Add optional practice data','إضافة بيانات تدريبية اختيارية'),
+            description:t('Explore fictional customers, items and draft examples in a separate DEMO company. Your real company stays empty and remains the default. Practice documents cannot be submitted. ZATCA examples are clearly labelled simulations, not real tax approvals.','استكشف عملاء وأصنافاً ومستندات مسودة وهمية في شركة تدريبية مستقلة. تبقى شركتك الحقيقية دون بيانات تجريبية وهي الشركة الافتراضية. لا يمكن اعتماد المستندات التدريبية. أمثلة هيئة الزكاة محاكاة موضحة وليست موافقات ضريبية حقيقية.')});
+        }
+
         if (field(slide,'company_abbr')) field(slide,'company_abbr').label = t('Short company code','رمز الشركة المختصر');
       }
     }

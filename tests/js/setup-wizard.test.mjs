@@ -27,3 +27,11 @@ test('company suggestions work when ERP slide registration runs after the custom
  assert.equal(frappe.setup.slides[0].fields[0].default,'Company B');
  assert.equal(frappe.setup.slides[0].fields[0].read_only,undefined);
 });
+
+test('optional demo is off by default, additive, translated and never replaces native handlers',()=>{
+ for(const lang of ['en','ar']){const events={},native=()=>{},slide={name:'organization',fields:[{fieldname:'company_name',reqd:1}],onload:native};
+ const frappe={boot:{lang,yousr_setup:{demo_available:true}},setup:{slides:[slide],on:(e,f)=>events[e]=f}};
+ vm.runInNewContext(code,{frappe,document:{}});events.before_load();events.before_load();
+ const demo=slide.fields.filter(f=>f.fieldname==='yousr_load_demo');assert.equal(demo.length,1);assert.equal(demo[0].default,0);assert.equal(demo[0].fieldtype,'Check');assert.equal(slide.onload,native);assert.equal(slide.fields[0].reqd,1);assert.ok(demo[0].description.includes(lang==='ar'?'محاكاة':'simulations'));}
+});
+test('existing or feature-disabled setups receive no demo option',()=>{const events={},slide={name:'organization',fields:[]};const frappe={boot:{yousr_setup:{}},setup:{slides:[slide],on:(e,f)=>events[e]=f}};vm.runInNewContext(code,{frappe,document:{}});events.before_load();assert.ok(!slide.fields.some(f=>f.fieldname==='yousr_load_demo'));});

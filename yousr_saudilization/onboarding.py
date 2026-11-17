@@ -38,6 +38,7 @@ def boot_session(bootinfo):
         "help_url": portal + "/help-and-sessions",
     }
     if not setup_complete and admin:
+        ui["demo_available"] = frappe.conf.get("yousr_demo_enabled", True) not in (False, 0, "0")
         ui.update({
             "full_name": _text(context.get("full_name"), 100),
             "company_name": _text(context.get("company_name"), 140),
@@ -49,6 +50,11 @@ def boot_session(bootinfo):
     if (not setup_complete or context.get("managed_setup") is True) and not frappe.conf.get("yousr_external_diagnostics_enabled"):
         bootinfo["enable_telemetry"] = False
     bootinfo["yousr_setup"] = ui
+    if setup_complete and admin and frappe.db.exists("DocType", "Yousr Demo Setup"):
+        status = frappe.db.get_single_value("Yousr Demo Setup", "status")
+        if status:
+            bootinfo["yousr_practice"] = {"status": status, "route": "yousr-practice"}
+
     # v16's apps screen reads app_data; keep native permission and route metadata.
     ar = str(bootinfo.get("lang") or "en").startswith("ar")
     for app in bootinfo.get("app_data") or []:

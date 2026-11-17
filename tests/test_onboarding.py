@@ -6,7 +6,7 @@ import unittest
 
 class OnboardingTest(unittest.TestCase):
     def load(self, context=None, user='Administrator', roles=None, complete=False):
-        sys.modules['frappe'] = types.SimpleNamespace(conf={'yousr_onboarding_context':context or {}}, session=types.SimpleNamespace(user=user), get_roles=lambda:roles or [], is_setup_complete=lambda:complete)
+        sys.modules['frappe'] = types.SimpleNamespace(conf={'yousr_onboarding_context':context or {}}, session=types.SimpleNamespace(user=user), get_roles=lambda:roles or [], is_setup_complete=lambda:complete, db=types.SimpleNamespace(exists=lambda *args:False))
         sys.modules.pop('yousr_saudilization.onboarding',None)
         module=importlib.import_module('yousr_saudilization.onboarding')
         boot={'setup_complete':complete, 'enable_telemetry':True, 'apps_data':{'apps':[{'name':'erpnext','title':'ERPNext','logo':'/assets/erpnext/images/erpnext-logo.svg'}]}}
