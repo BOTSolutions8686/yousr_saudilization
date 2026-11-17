@@ -1,0 +1,58 @@
+{
+  "doctype": "DocType",
+  "name": "Yousr Demo Setup",
+  "module": "Yousr Saudilization",
+  "issingle": 1,
+  "track_changes": 1,
+  "field_order": [
+    "status",
+    "real_company",
+    "demo_company",
+    "records",
+    "error_code"
+  ],
+  "fields": [
+    {
+      "fieldname": "status",
+      "label": "Practice status",
+      "fieldtype": "Select",
+      "options": "\nQueued\nBuilding\nReady\nFailed",
+      "read_only": 1
+    },
+    {
+      "fieldname": "real_company",
+      "label": "Real company",
+      "fieldtype": "Link",
+      "options": "Company",
+      "read_only": 1
+    },
+    {
+      "fieldname": "demo_company",
+      "label": "Practice company",
+      "fieldtype": "Link",
+      "options": "Company",
+      "read_only": 1
+    },
+    {
+      "fieldname": "records",
+      "label": "Owned practice records",
+      "fieldtype": "Long Text",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "error_code",
+      "label": "Failure category",
+      "fieldtype": "Data",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

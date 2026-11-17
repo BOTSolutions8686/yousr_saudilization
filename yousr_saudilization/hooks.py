@@ -63,7 +63,7 @@ fixtures = [
 
 # include js, css files in header of desk.html
 app_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
-app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-menus.js?v={__version__}"]
+app_include_js = [f"/assets/yousr_saudilization/js/yousrerp-brand.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-menus.js?v={__version__}", f"/assets/yousr_saudilization/js/yousrerp-demo.js?v={__version__}"]
 
 # include js, css files in header of web template
 web_include_css = f"/assets/yousr_saudilization/css/yousrerp-brand.css?v={__version__}"
@@ -317,4 +317,14 @@ override_whitelisted_methods = {
        "yousr_saudilization.managed_billing.unavailable" for name in _provider_billing_rpc},
     **{f"frappe.integrations.frappe_providers.cloud_settings.{name}":
        "yousr_saudilization.managed_billing.unavailable" for name in _cloud_billing_rpc},
+}
+
+# Optional practice data runs only after successful native setup, never during migration.
+setup_wizard_success = "yousr_saudilization.demo_setup.request_after_setup"
+doc_events = {
+    "*": {
+        "before_validate": "yousr_saudilization.demo_setup.guard_document",
+        "before_submit": "yousr_saudilization.demo_setup.block_submission",
+        "before_rename": "yousr_saudilization.demo_setup.protect_rename",
+    },
 }

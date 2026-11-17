@@ -1,0 +1,13 @@
+{
+  "doctype": "Page",
+  "name": "yousr-practice",
+  "page_name": "yousr-practice",
+  "title": "Practice area",
+  "module": "Yousr Saudilization",
+  "standard": "Yes",
+  "roles": [
+    {
+      "role": "System Manager"
+    }
+  ]
+}
