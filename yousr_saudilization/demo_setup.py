@@ -65,15 +65,35 @@ def request_after_setup(args):
         state.status = "Queued"
         state.records = "[]"
         _save(state)
-        frappe.enqueue("yousr_saudilization.demo_setup.create_demo", queue="long",
-                       enqueue_after_commit=True, job_id="yousr-optional-demo", timeout=300)
+        frappe.db.after_commit.add(_enqueue_safely)
     except Exception:
         frappe.log_error(title="Optional Yousr practice setup could not be queued")
 
 
+def _enqueue_safely():
+    """Redis/queue failure after commit must not turn successful setup into HTTP500."""
+    try:
+        frappe.enqueue("yousr_saudilization.demo_setup.create_demo", queue="long",
+                       job_id="yousr-optional-demo", timeout=300)
+    except Exception:
+        try:
+            state = _state()
+            state.status = "Failed"
+            state.error_code = "practice_queue_unavailable"
+            _save(state)
+            # Separate post-commit status transaction; native setup is already complete.
+            frappe.db.commit()
+            frappe.log_error(title="Optional Yousr practice queue unavailable")
+        except Exception:
+            # Even diagnostic storage failure cannot invalidate completed business setup.
+            frappe.logger().error("Optional practice queue/status unavailable")
+
+
 def _defaults():
     return (frappe.db.get_single_value("Global Defaults", "default_company"),
-            frappe.defaults.get_global_default("company"))
+            frappe.defaults.get_global_default("company"),
+            frappe.get_all("DefaultValue", filters={"defkey": ["in", ["company", "Company", "cost_center", "warehouse"]]},
+                           fields=["parent", "defkey", "defvalue"], order_by="parent, defkey, defvalue"))
 
 
 def _insert(state, doctype, values):
@@ -228,6 +248,5 @@ def retry():
         frappe.throw(_("This practice setup cannot be retried automatically. Please contact support."))
     state.status = "Queued"
     _save(state)
-    frappe.enqueue("yousr_saudilization.demo_setup.create_demo", queue="long",
-                   enqueue_after_commit=True, job_id="yousr-optional-demo", timeout=300)
+    frappe.db.after_commit.add(_enqueue_safely)
     return {"status": "Queued"}

@@ -30,7 +30,7 @@ class DemoSetupTest(unittest.TestCase):
             conf={}, session=types.SimpleNamespace(user='Administrator'),
             whitelist=lambda **kw: lambda f:f, _=lambda x:x,
             throw=deny, PermissionError=PermissionError, only_for=Mock(),
-            db=types.SimpleNamespace(exists=Mock(return_value=True)),
+            db=types.SimpleNamespace(exists=Mock(return_value=True), after_commit=types.SimpleNamespace(add=Mock()), commit=Mock()),
             enqueue=Mock(), log_error=Mock(), get_single=Mock(),
         )
         sys.modules['frappe'] = self.frappe
@@ -53,15 +53,26 @@ class DemoSetupTest(unittest.TestCase):
         self.m.request_after_setup({'yousr_load_demo':1,'company_name':'Real Company'})
         self.assertEqual(state.status,'Queued')
         self.assertEqual(state.real_company,'Real Company')
+        self.frappe.enqueue.assert_not_called()
+        self.frappe.db.after_commit.add.assert_called_once_with(self.m._enqueue_safely)
+        self.m._enqueue_safely()
         self.frappe.enqueue.assert_called_once()
-        self.assertTrue(self.frappe.enqueue.call_args.kwargs['enqueue_after_commit'])
         self.m.request_after_setup({'yousr_load_demo':1,'company_name':'Real Company'})
-        self.frappe.enqueue.assert_called_once()
+        self.frappe.db.after_commit.add.assert_called_once()
 
     def test_native_setup_does_not_fail_when_optional_queueing_fails(self):
         self.frappe.get_single.side_effect = RuntimeError('queue unavailable')
         self.m.request_after_setup({'yousr_load_demo':1,'company_name':'Real Company'})
         self.frappe.log_error.assert_called_once()
+
+    def test_queue_failure_after_commit_is_contained_and_retryable(self):
+        state=types.SimpleNamespace(status='Queued',records='[]',save=Mock())
+        self.frappe.get_single.return_value=state
+        self.frappe.enqueue.side_effect=RuntimeError('Redis unavailable')
+        self.m._enqueue_safely()
+        self.assertEqual(state.status,'Failed')
+        self.assertEqual(state.error_code,'practice_queue_unavailable')
+        self.frappe.db.commit.assert_called_once()
 
     def test_guest_cannot_access_status_or_retry(self):
         self.frappe.session.user = 'Guest'
