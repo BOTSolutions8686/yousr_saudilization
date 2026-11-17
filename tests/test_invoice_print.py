@@ -80,8 +80,9 @@ class InvoicePrintTests(unittest.TestCase):
         self.frappe.get_doc.assert_called_with('Sales Invoice','INV-1')
     def test_default_install_idempotency_preserves_custom_choice_and_uninstall(self):
         module=types.ModuleType('frappe.custom.doctype.property_setter.property_setter');module.make_property_setter=Mock()
-        with patch.dict(sys.modules,{'frappe.custom.doctype.property_setter.property_setter':module}):
-            self.m.configure_default();module.make_property_setter.assert_called_once();self.frappe.db.set_default.assert_called_once()
+        importer=types.ModuleType('frappe.modules.import_file');importer.import_file=Mock()
+        with patch.dict(sys.modules,{'frappe.custom.doctype.property_setter.property_setter':module,'frappe.modules.import_file':importer}):
+            self.m.configure_default();importer.import_file.assert_called_with("Yousr Saudilization","Print Format",self.m.FORMAT,force=True);module.make_property_setter.assert_called_once();self.frappe.db.set_default.assert_called_once()
             module.make_property_setter.reset_mock();self.frappe.get_meta.return_value.default_print_format=self.m.FORMAT
             self.m.configure_default();module.make_property_setter.assert_not_called()
             self.frappe.db.get_default.return_value=json.dumps({'previous':'Standard'});self.m.remove_owned_default()

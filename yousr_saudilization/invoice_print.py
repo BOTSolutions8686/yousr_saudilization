@@ -17,6 +17,10 @@ def configure_default():
     """Install an app default, retaining a tenant's explicitly selected custom format."""
     if not frappe.db.exists("DocType", "Sales Invoice") or not frappe.db.exists("Print Format", FORMAT):
         return
+    # Print Formats can be skipped by timestamp-based standard sync. Refresh only
+    # this app-owned format; never a tenant-named copy.
+    from frappe.modules.import_file import import_file
+    import_file("Yousr Saudilization", "Print Format", FORMAT, force=True)
     current = frappe.get_meta("Sales Invoice").default_print_format or ""
     if current == FORMAT or current not in _OWNED_DEFAULTS:
         return
