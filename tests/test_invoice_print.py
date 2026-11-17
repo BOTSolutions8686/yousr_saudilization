@@ -29,7 +29,7 @@ class InvoicePrintTests(unittest.TestCase):
         self.frappe.db.get_value.side_effect = lambda dt,*a,**kw: self.settings if dt=='ZATCA Phase 1 Business Settings' else self.vat
         self.frappe.get_all = Mock(side_effect=lambda *a,**kw:self.rows)
         self.frappe.get_doc = Mock(side_effect=lambda dt,name:self.doc if dt=='Sales Invoice' else self.signed)
-        self.frappe.get_meta = Mock(return_value=D(default_print_format=''))
+        self.frappe.get_meta = Mock(return_value=D(default_print_format='Sales Invoice Classic'))
         self.frappe.db.get_default.return_value = None
         utils=types.ModuleType('frappe.utils')
         utils.getdate=lambda v:date.fromisoformat(v)

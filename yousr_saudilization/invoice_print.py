@@ -10,7 +10,7 @@ import frappe
 
 FORMAT = "Saudilization Sales Invoice"
 _BACKUP_KEY = "yousr_invoice_print_default_before"
-_OWNED_DEFAULTS = {"", "Standard", FORMAT, "ZATCA Phase 1 Print Format", "ZATCA Phase 2 Print Format", "Saudilization Sales Invoice - Nawaf Phase 1"}
+_OWNED_DEFAULTS = {"", "Standard", "Sales Invoice Classic", "Sales Invoice Modern", "Sales Invoice Bordered", "Sales Invoice Modern with Images", FORMAT, "ZATCA Phase 1 Print Format", "ZATCA Phase 2 Print Format", "Saudilization Sales Invoice - Nawaf Phase 1"}
 
 
 def configure_default():
