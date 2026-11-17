@@ -318,3 +318,7 @@ override_whitelisted_methods = {
     **{f"frappe.integrations.frappe_providers.cloud_settings.{name}":
        "yousr_saudilization.managed_billing.unavailable" for name in _cloud_billing_rpc},
 }
+
+# Native invoice QR rendering never submits invoices or calls ZATCA.
+jinja = {"methods": ["yousr_saudilization.invoice_print.yousr_invoice_qr"]}
+after_migrate.append("yousr_saudilization.invoice_print.configure_default")
